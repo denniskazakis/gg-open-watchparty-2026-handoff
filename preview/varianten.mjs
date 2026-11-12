@@ -30,10 +30,20 @@ c:{pano:`<rect y="880" width="3240" height="470" fill="${CR}"/>`+c(1080,880,170,
 // B1/B2: Basis B + "World Finals" auf Slide 1. Jede Info genau einmal: S1 Hook, S2 Fakten, S3 Einladung.
 const s2=t(540,400,44,600,CR,'Samstag','text-anchor="middle"')+t(540,560,150,800,CR,'14.11.2026','text-anchor="middle" letter-spacing="-5"')+t(540,770,130,800,CR,'19:00 / 20:00','text-anchor="middle" letter-spacing="-4"')+t(540,940,60,700,CR,'Hauptstraße 240','text-anchor="middle"')+t(540,1010,48,600,CR,'Herne','text-anchor="middle"');
 const s3=t(540,600,190,800,CR,'Sei dabei.','text-anchor="middle" letter-spacing="-6"')+pill(280,700,520,120,'Eintritt frei',54,OR,INK);
-const pb=V.b.pano.replace('c(540,560,470,D1)+c(540,560,330,D2,.55)','c(540,675,470,D1)+c(540,675,330,D2,.55)').replace(spark(170,260),'');
+const pb=V.b.pano.replace('c(540,560,470,D1)+c(540,560,330,D2,.55)','c(540,675,470,D1)+c(540,675,330,D2,.55)').replace(spark(170,260),'').replace(spark(1300,180,11),'');
 const arc=(id,d)=>`<path id="${id}" d="${d}" fill="none"/>`;
 V.b1={pano:pb,s:[logo(110,380,860)+t(540,850,120,800,CR,'World Finals','text-anchor="middle" letter-spacing="-3"')+t(540,940,52,600,CR,'in der GG Open Lobby','text-anchor="middle"'),s2,s3]};
 V.b2={pano:pb,s:[`<defs>${arc('top','M145 675 A395 395 0 0 1 935 675')}${arc('bot','M110 675 A430 430 0 0 0 970 675')}</defs>`+logo(230,575,620)+`<text font-size="76" font-weight="800" fill="${CR}" letter-spacing="10"><textPath href="#top" startOffset="50%" text-anchor="middle">WORLD FINALS</textPath></text><text font-size="50" font-weight="600" fill="${CR}" letter-spacing="2"><textPath href="#bot" startOffset="50%" text-anchor="middle">in der GG Open Lobby</textPath></text>`,s2,s3]};
+
+// W1/W2: B1-Basis + freigestellte Illustration (Owner-Freigabe) auf S1+S2, Einlass/Beginn getrennt, "League of Legends" auf S1.
+const IR=1041/739, ill=(x,y,w)=>`<image href="../../assets/illustration_cutout.png" x="${x}" y="${y}" width="${w}" height="${(w/IR).toFixed(1)}"/>`;
+const mid='text-anchor="middle"';
+const hook=(ly,lw,y0)=>logo(540-lw/2,ly,lw)+t(540,y0,40,600,CR,'League of Legends',mid+' letter-spacing="1"')+t(540,y0+108,108,800,CR,'World Finals',mid+' letter-spacing="-3"')+t(540,y0+172,42,600,CR,'in der GG Open Lobby',mid);
+const times=(y,big)=>t(290,y,big,800,CR,'19:00',mid+' letter-spacing="-3"')+t(290,y+58,44,600,CR,'Einlass',mid)+t(790,y,big,800,CR,'20:00',mid+' letter-spacing="-3"')+t(790,y+58,44,600,CR,'Beginn',mid);
+V.w1={pano:pb,s:[hook(40,640,310)+ill(0,1350-1080/IR,1080),
+  t(540,170,60,700,CR,'Samstag, 14.11.2026',mid)+times(340,120)+t(540,510,44,600,CR,'Hauptstraße 240, Herne',mid)+ill(0,1350-1080/IR,1080),s3]};
+V.w2={pano:pb,s:[hook(30,580,275)+ill(-120,1350-1200/IR,1200),
+  t(540,220,64,700,CR,'Samstag, 14.11.2026',mid)+times(430,150)+t(540,640,48,600,CR,'Hauptstraße 240, Herne',mid)+ill(300,1350-780/IR,780),s3]};
 const only=process.argv.slice(2);
 const css=`@font-face{font-family:P;font-weight:600;src:url(../../../fonts/Poppins/Poppins-SemiBold.ttf)}@font-face{font-family:P;font-weight:700;src:url(../../../fonts/Poppins/Poppins-Bold.ttf)}@font-face{font-family:P;font-weight:800;src:url(../../../fonts/Poppins/Poppins-ExtraBold.ttf)}html,body{margin:0}svg{display:block}`;
 const br=await chromium.launch(),pg=await br.newPage({viewport:{width:1080,height:1350}});
