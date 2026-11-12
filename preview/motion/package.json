@@ -1,1 +1,14 @@
-{"name":"wp-motion","private":true,"scripts":{"render":"remotion render src/index.jsx Reel out/reel.mp4 --browser-executable=/opt/pw-browsers/chromium --chrome-mode=headless-shell"},"dependencies":{"remotion":"4.0.543","@remotion/cli":"4.0.543","react":"18.3.1","react-dom":"18.3.1"}}
+{
+ "name": "wp-motion",
+ "private": true,
+ "scripts": {
+  "render": "remotion render src/index.jsx Reel out/reel.mp4 --browser-executable=/opt/pw-browsers/chromium --chrome-mode=headless-shell",
+  "slides": "for s in 1 2; do remotion render src/slides.jsx Slide$s out/slide$s.mov --codec=prores --prores-profile=hq --browser-executable=/opt/pw-browsers/chromium --chrome-mode=headless-shell && ffmpeg -y -i out/slide$s.mov -c:v libx264 -preset slow -b:v 15M -minrate 15M -maxrate 15M -bufsize 15M -x264-params nal-hrd=cbr -pix_fmt yuv420p -r 30 -movflags +faststart -an ../final/slide$s.mp4; done"
+ },
+ "dependencies": {
+  "remotion": "4.0.543",
+  "@remotion/cli": "4.0.543",
+  "react": "18.3.1",
+  "react-dom": "18.3.1"
+ }
+}
