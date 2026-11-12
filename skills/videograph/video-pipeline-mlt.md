@@ -28,16 +28,16 @@ Known installed versions from validation:
 
 ## Shared project convention
 
-Use `/opt/video-projects` for durable shared work:
+Use `<local-video-projects>` for durable shared work:
 
 ```bash
-mkdir -p /opt/video-projects/<project-name>/{src,mlt,renders,logs}
+mkdir -p <local-video-projects>/<project-name>/{src,mlt,renders,logs}
 ```
 
 Recommended layout:
 
 ```text
-/opt/video-projects/<project-name>/
+<local-video-projects>/<project-name>/
   src/        # source media
   mlt/        # .mlt project files, edit interchange
   renders/    # mp4/mov outputs
@@ -57,7 +57,7 @@ Keep media paths relative to the `.mlt` root when possible, so the project folde
 Example:
 
 ```bash
-cd /opt/video-projects/demo/src
+cd <local-video-projects>/demo/src
 melt clipA.mp4 clipB.mp4 -consumer xml:../mlt/project.mlt all=1
 ```
 
@@ -66,7 +66,7 @@ Quick XML sanity check:
 ```bash
 python3 - <<'PY'
 import xml.etree.ElementTree as ET
-ET.parse('/opt/video-projects/demo/mlt/project.mlt')
+ET.parse('<local-video-projects>/demo/mlt/project.mlt')
 print('valid xml')
 PY
 ```
@@ -76,7 +76,7 @@ PY
 Fast draft/default render:
 
 ```bash
-cd /opt/video-projects/demo
+cd <local-video-projects>/demo
 melt mlt/project.mlt \
   -consumer avformat:renders/out.mp4 \
   vcodec=libx264 preset=veryfast acodec=aac \
@@ -112,8 +112,8 @@ Try opening a project headless/offscreen; timeout after startup is acceptable if
 ```bash
 QT_QPA_PLATFORM=offscreen timeout 8s shotcut \
   --appdata /tmp/shotcut-appdata \
-  /opt/video-projects/demo/mlt/project.mlt \
-  > /opt/video-projects/demo/logs/shotcut-open.log 2>&1
+  <local-video-projects>/demo/mlt/project.mlt \
+  > <local-video-projects>/demo/logs/shotcut-open.log 2>&1
 ```
 
 If the Qt module says X11 is required and `xvfb-run` exists:
@@ -180,17 +180,17 @@ cli-hub search video
 cli-hub info shotcut
 cli-hub info kdenlive
 
-cli-anything-shotcut --json media probe /opt/video-projects/demo/src/clipA.mp4
-cli-anything-shotcut --json project open /opt/video-projects/demo/mlt/project.mlt
-cli-anything-shotcut --json --project /opt/video-projects/demo/mlt/project.mlt project info
-cli-anything-shotcut --json --project /opt/video-projects/demo/mlt/project.mlt export presets
-cli-anything-shotcut --json --project /opt/video-projects/demo/mlt/project.mlt export render /opt/video-projects/demo/renders/shotcut-cli.mp4
+cli-anything-shotcut --json media probe <local-video-projects>/demo/src/clipA.mp4
+cli-anything-shotcut --json project open <local-video-projects>/demo/mlt/project.mlt
+cli-anything-shotcut --json --project <local-video-projects>/demo/mlt/project.mlt project info
+cli-anything-shotcut --json --project <local-video-projects>/demo/mlt/project.mlt export presets
+cli-anything-shotcut --json --project <local-video-projects>/demo/mlt/project.mlt export render <local-video-projects>/demo/renders/shotcut-cli.mp4
 
-cli-anything-kdenlive --json project new -n demo --width 1280 --height 720 --fps-num 30 --fps-den 1 -o /opt/video-projects/demo/mlt/kdenlive-cli.json
-cli-anything-kdenlive --json --project /opt/video-projects/demo/mlt/kdenlive-cli.json bin import /opt/video-projects/demo/src/clipA.mp4
-cli-anything-kdenlive --json --project /opt/video-projects/demo/mlt/kdenlive-cli.json timeline add-track -n V1 --type video
-cli-anything-kdenlive --json --project /opt/video-projects/demo/mlt/kdenlive-cli.json export presets
-cli-anything-kdenlive --json --project /opt/video-projects/demo/mlt/kdenlive-cli.json export xml -o /opt/video-projects/demo/mlt/kdenlive-cli.mlt
+cli-anything-kdenlive --json project new -n demo --width 1280 --height 720 --fps-num 30 --fps-den 1 -o <local-video-projects>/demo/mlt/kdenlive-cli.json
+cli-anything-kdenlive --json --project <local-video-projects>/demo/mlt/kdenlive-cli.json bin import <local-video-projects>/demo/src/clipA.mp4
+cli-anything-kdenlive --json --project <local-video-projects>/demo/mlt/kdenlive-cli.json timeline add-track -n V1 --type video
+cli-anything-kdenlive --json --project <local-video-projects>/demo/mlt/kdenlive-cli.json export presets
+cli-anything-kdenlive --json --project <local-video-projects>/demo/mlt/kdenlive-cli.json export xml -o <local-video-projects>/demo/mlt/kdenlive-cli.mlt
 ```
 
 Notes from validation:

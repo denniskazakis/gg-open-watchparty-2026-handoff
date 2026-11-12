@@ -16,7 +16,7 @@ Use this skill only when all conditions pass:
 4. the manifest passes:
 
 ```bash
-PYTHONPATH=/opt/hermos4 python3 -m hermes.creative_lanes.validate_manifest MANIFEST --phase task
+PYTHONPATH=<local-hermos4> python3 -m hermes.creative_lanes.validate_manifest MANIFEST --phase task
 ```
 
 If any condition fails, stop brand QA and use only `vertical-reel-qa`. Do not search the brandkit, infer a compatibility path, or downgrade STRICT to CORE/FREE.
@@ -26,7 +26,7 @@ If any condition fails, stop brand QA and use only `vertical-reel-qa`. Do not se
 Read only the exact paths named by the validated manifest. A named recipe may live under the canonical archive path, for example:
 
 ```text
-/opt/hermos4/brands/gg-open-brandkit/recipes-archive/reel-production/SKILL.md
+<local-hermos4>/brands/gg-open-brandkit/recipes-archive/reel-production/SKILL.md
 ```
 
 A compatibility path is not permission. Prior campaigns, campaign outputs, and unrelated guidelines remain forbidden unless separately allowlisted.
@@ -40,7 +40,7 @@ A compatibility path is not permission. Prior campaigns, campaign outputs, and u
 5. Validate the handoff manifest:
 
 ```bash
-PYTHONPATH=/opt/hermos4 python3 -m hermes.creative_lanes.validate_manifest MANIFEST --phase handoff
+PYTHONPATH=<local-hermos4> python3 -m hermes.creative_lanes.validate_manifest MANIFEST --phase handoff
 ```
 
 ## Brand Checks
