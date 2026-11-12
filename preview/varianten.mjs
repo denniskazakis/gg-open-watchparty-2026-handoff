@@ -44,6 +44,12 @@ V.w1={pano:pb,s:[hook(40,640,310)+ill(0,1350-1080/IR,1080),
   t(540,170,60,700,CR,'Samstag, 14.11.2026',mid)+times(340,120)+t(540,510,44,600,CR,'Hauptstraße 240, Herne',mid)+ill(0,1350-1080/IR,1080),s3]};
 V.w2={pano:pb,s:[hook(30,580,275)+ill(-120,1350-1200/IR,1200),
   t(540,220,64,700,CR,'Samstag, 14.11.2026',mid)+times(430,150)+t(540,640,48,600,CR,'Hauptstraße 240, Herne',mid)+ill(300,1350-780/IR,780),s3]};
+
+// X: Illustration genau einmal, über die Naht S1|S2 (2/3 auf S1, 1/3 auf S2). Abgeschnittene Bildkante rechts weich ausgeblendet.
+const IW=1254, IH=IW/IR, IX=1080-IW*2/3, IY=1350-IH;
+const illX=`<defs><linearGradient id="fade" x2="1"><stop offset=".88" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="fm"><rect x="${IX}" y="${IY}" width="${IW}" height="${IH}" fill="url(#fade)"/></mask></defs><g mask="url(#fm)">${ill(IX,IY,IW)}</g>`;
+V.x={pano:pb+illX,s:[hook(20,540,245),
+  t(540,170,60,700,CR,'Samstag, 14.11.2026',mid)+times(360,130)+t(540,530,46,600,CR,'Hauptstraße 240, Herne',mid),s3]};
 const only=process.argv.slice(2);
 const css=`@font-face{font-family:P;font-weight:600;src:url(../../../fonts/Poppins/Poppins-SemiBold.ttf)}@font-face{font-family:P;font-weight:700;src:url(../../../fonts/Poppins/Poppins-Bold.ttf)}@font-face{font-family:P;font-weight:800;src:url(../../../fonts/Poppins/Poppins-ExtraBold.ttf)}html,body{margin:0}svg{display:block}`;
 const br=await chromium.launch(),pg=await br.newPage({viewport:{width:1080,height:1350}});
