@@ -2,7 +2,12 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createRequire} from 'node:module';const {chromium}=createRequire(import.meta.url)('playwright');
 const C={g:'#218f5b',cream:'#f5efdf',ink:'#17251f',or:'#ef6b43',red:'#cd4a2f'};
-const art=readFileSync('../assets/final/slide2.svg','utf8').match(/<g>.*<\/g>/s)[0]; // Illustration (Monitor/Pokal/Pad/Crowd)
+// Neue Illustration: Arena aus konzentrischen Rängen + Leinwand mit Play + Publikum-Punkte (original, geometrisch)
+const dots=(r,n,fills)=>Array.from({length:n},(_,i)=>{const a=Math.PI*(1.06+0.88*i/(n-1)),x=540+r*Math.cos(a),y=1400+r*Math.sin(a);return x>255&&x<825&&y<1090||y>1235?'':`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15" fill="${fills[i%fills.length]}"/>`}).join('');
+const art=`<g><path d="M0 1010 L330 700 H520 L0 1190Z" fill="${C.or}" opacity=".95"/><path d="M1080 700 V860 L860 700Z" fill="${C.ink}"/>`+
+[[640,'#1b7a4d'],[540,'#2aa06a'],[440,'#1b7a4d'],[340,'#17251f']].map(([r,f])=>`<path d="M${540-r} 1400 A${r} ${r} 0 0 1 ${540+r} 1400Z" fill="${f}"/>`).join('')+
+`<rect x="290" y="800" width="500" height="250" rx="26" fill="${C.cream}" stroke="${C.ink}" stroke-width="12"/><rect x="316" y="826" width="448" height="198" rx="12" fill="${C.ink}"/><path d="M500 880 L500 970 L586 925Z" fill="${C.or}"/>`+
+dots(300,13,[C.cream,C.or])+dots(400,17,[C.cream,'#d5e8c5',C.or])+dots(500,21,['#d5e8c5',C.cream,C.or])+`</g>`;
 const logo=(x,y,w)=>`<image href="../assets/watchparty_logo_clean.png" x="${x}" y="${y}" width="${w}" height="${w*498/1539}"/>`;
 const t=(x,y,s,w,f,txt,extra='')=>`<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${f}" ${extra}>${txt}</text>`;
 const pill=(x,y,w,h,txt,s=38)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h/2}" fill="${C.or}" stroke="${C.ink}" stroke-width="8"/>`+t(x+w/2,y+h/2+s*.35,s,700,C.cream,txt,'text-anchor="middle" letter-spacing="1.5"');
@@ -11,7 +16,7 @@ const slides={
 1:logo(80,70,400)+t(80,360,150,800,C.cream,'Watchparty','letter-spacing="-3"')+t(84,442,52,600,C.ink,'in der')+t(80,545,96,800,C.cream,'GG Open Lobby','letter-spacing="-1"')+pill(80,590,500,80,'SAMSTAG · 14.11.2026'),
 2:logo(80,70,400)+`<rect x="70" y="240" width="940" height="410" rx="34" fill="${C.cream}" stroke="${C.ink}" stroke-width="10"/>`+row(305,'DATUM','Samstag, 14.11.2026')+row(415,'UHRZEIT','19:00 / 20:00')+row(525,'ORT','Hauptstraße 240, Herne')+pill(650,92,330,76,'EINTRITT FREI',34),
 3:logo(80,70,400)+t(80,370,128,800,C.cream,'Sei dabei.','letter-spacing="-2"')+t(84,440,40,600,C.ink,'Watchparty in der GG Open Lobby')+pill(80,480,380,84,'EINTRITT FREI',38)+t(82,628,40,700,C.cream,'Samstag, 14.11.2026 · 19:00 / 20:00')+t(82,682,34,600,C.ink,'Hauptstraße 240, Herne')};
-const svg=b=>`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" font-family="Poppins,sans-serif"><rect width="1080" height="1350" fill="${C.g}"/><circle cx="950" cy="110" r="300" fill="#b7d966" opacity=".3"/><circle cx="70" cy="1170" r="250" fill="#d5e8c5" opacity=".16"/><circle cx="920" cy="920" r="420" fill="${C.ink}" opacity=".07"/>${b}${art}${t(82,1300,20,600,C.cream,'GG OPEN · HAUPTSTRASSE 240 · HERNE','letter-spacing="1" opacity=".9"')}</svg>`;
+const svg=b=>`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" font-family="Poppins,sans-serif"><rect width="1080" height="1350" fill="${C.g}"/><circle cx="950" cy="110" r="300" fill="#b7d966" opacity=".3"/><circle cx="70" cy="1170" r="250" fill="#d5e8c5" opacity=".16"/><circle cx="920" cy="920" r="420" fill="${C.ink}" opacity=".07"/>${b}${art}<rect y="1255" width="1080" height="95" fill="${C.ink}"/>${t(82,1311,20,600,C.cream,'GG OPEN · HAUPTSTRASSE 240 · HERNE','letter-spacing="1"')}</svg>`;
 const html=b=>`<!doctype html><meta charset=utf-8><style>@font-face{font-family:Poppins;font-weight:600;src:url(../../fonts/Poppins/Poppins-SemiBold.ttf)}@font-face{font-family:Poppins;font-weight:700;src:url(../../fonts/Poppins/Poppins-Bold.ttf)}@font-face{font-family:Poppins;font-weight:800;src:url(../../fonts/Poppins/Poppins-ExtraBold.ttf)}html,body{margin:0;background:${C.g}}svg{display:block}</style>${svg(b)}`;
 mkdirSync('slides',{recursive:true});
 const br=await chromium.launch(),pg=await br.newPage({viewport:{width:1080,height:1350}});
