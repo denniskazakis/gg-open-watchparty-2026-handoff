@@ -26,9 +26,18 @@ c:{pano:`<rect y="880" width="3240" height="470" fill="${CR}"/>`+c(1080,880,170,
  s:[logo(60,150,960)+t(84,650,52,600,INK,'in der')+t(80,760,108,800,CR,'GG Open Lobby','letter-spacing="-2"')+t(80,1110,70,800,INK,'Samstag, 14.11.2026','letter-spacing="-1"')+t(80,1200,70,800,RED,'19:00 / 20:00','letter-spacing="-1"')+t(80,1280,30,600,INK,'Hauptstraße 240, Herne'),
   t(64,420,330,800,CR,'19:00','letter-spacing="-14"')+t(80,560,120,800,INK,'/ 20:00','letter-spacing="-3"')+logo(640,640,340)+t(80,1110,64,800,INK,'Samstag, 14.11.2026')+t(80,1190,64,800,INK,'Hauptstraße 240, Herne')+t(80,1270,64,800,RED,'Eintritt frei'),
   t(70,380,190,800,CR,'Sei dabei.','letter-spacing="-6"')+t(84,470,44,600,INK,'Watchparty in der GG Open Lobby')+logo(70,520,340)+t(80,1100,110,800,RED,'Eintritt frei','letter-spacing="-3"')+t(80,1190,40,700,INK,'Samstag, 14.11.2026 · 19:00 / 20:00')+t(80,1250,36,600,INK,'Hauptstraße 240, Herne')]}};
+
+// B1/B2: Basis B + "World Finals" auf Slide 1. Jede Info genau einmal: S1 Hook, S2 Fakten, S3 Einladung.
+const s2=t(540,400,44,600,CR,'Samstag','text-anchor="middle"')+t(540,560,150,800,CR,'14.11.2026','text-anchor="middle" letter-spacing="-5"')+t(540,770,130,800,CR,'19:00 / 20:00','text-anchor="middle" letter-spacing="-4"')+t(540,940,60,700,CR,'Hauptstraße 240','text-anchor="middle"')+t(540,1010,48,600,CR,'Herne','text-anchor="middle"');
+const s3=t(540,600,190,800,CR,'Sei dabei.','text-anchor="middle" letter-spacing="-6"')+pill(280,700,520,120,'Eintritt frei',54,OR,INK);
+const pb=V.b.pano.replace('c(540,560,470,D1)+c(540,560,330,D2,.55)','c(540,675,470,D1)+c(540,675,330,D2,.55)').replace(spark(170,260),'');
+const arc=(id,d)=>`<path id="${id}" d="${d}" fill="none"/>`;
+V.b1={pano:pb,s:[logo(110,380,860)+t(540,850,120,800,CR,'World Finals','text-anchor="middle" letter-spacing="-3"')+t(540,940,52,600,CR,'in der GG Open Lobby','text-anchor="middle"'),s2,s3]};
+V.b2={pano:pb,s:[`<defs>${arc('top','M145 675 A395 395 0 0 1 935 675')}${arc('bot','M110 675 A430 430 0 0 0 970 675')}</defs>`+logo(230,575,620)+`<text font-size="76" font-weight="800" fill="${CR}" letter-spacing="10"><textPath href="#top" startOffset="50%" text-anchor="middle">WORLD FINALS</textPath></text><text font-size="50" font-weight="600" fill="${CR}" letter-spacing="2"><textPath href="#bot" startOffset="50%" text-anchor="middle">in der GG Open Lobby</textPath></text>`,s2,s3]};
+const only=process.argv.slice(2);
 const css=`@font-face{font-family:P;font-weight:600;src:url(../../../fonts/Poppins/Poppins-SemiBold.ttf)}@font-face{font-family:P;font-weight:700;src:url(../../../fonts/Poppins/Poppins-Bold.ttf)}@font-face{font-family:P;font-weight:800;src:url(../../../fonts/Poppins/Poppins-ExtraBold.ttf)}html,body{margin:0}svg{display:block}`;
 const br=await chromium.launch(),pg=await br.newPage({viewport:{width:1080,height:1350}});
-for(const[k,v]of Object.entries(V)){mkdirSync(`varianten/${k}`,{recursive:true});
+for(const[k,v]of Object.entries(V).filter(([k])=>!only.length||only.includes(k))){mkdirSync(`varianten/${k}`,{recursive:true});
  for(let i=0;i<3;i++){const f=`varianten/${k}/slide${i+1}.html`;
   writeFileSync(f,`<!doctype html><meta charset=utf-8><style>${css}</style><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" font-family="P,sans-serif"><svg width="1080" height="1350" viewBox="${i*1080} 0 1080 1350"><rect width="3240" height="1350" fill="${G}"/>${v.pano}</svg>${v.s[i]}</svg>`);
   await pg.goto(`file://${process.cwd()}/${f}`);await pg.evaluate(()=>document.fonts.ready);await pg.screenshot({path:f.replace('.html','.png')})}}
