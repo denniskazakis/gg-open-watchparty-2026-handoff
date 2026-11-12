@@ -1,0 +1,41 @@
+# Generated/local files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Python/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Browser/render caches
+.playwright/
+.chromium/
+node_modules/
+.cache/
+coverage/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*
+*token*
+*secret*
+auth.json
+cookies*.json
+
+# Logs and scratch outputs
+*.log
+hermes-results/
