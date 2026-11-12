@@ -58,3 +58,19 @@ for(const[k,v]of Object.entries(V).filter(([k])=>!only.length||only.includes(k))
   writeFileSync(f,`<!doctype html><meta charset=utf-8><style>${css}</style><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" font-family="P,sans-serif"><svg width="1080" height="1350" viewBox="${i*1080} 0 1080 1350"><rect width="3240" height="1350" fill="${G}"/>${v.pano}</svg>${v.s[i]}</svg>`);
   await pg.goto(`file://${process.cwd()}/${f}`);await pg.evaluate(()=>document.fonts.ready);await pg.screenshot({path:f.replace('.html','.png')})}}
 await br.close();
+
+// Ebenen für Motion (node varianten.mjs layers): transparente 1080x1350-PNGs je Element, Positionen identisch zu V.x
+if(only.includes('layers')){
+ const L=[['s1_bg',0,pb,''],['s1_ill',0,illX,''],['s1_logo',-1,'',logo(270,20,540)],
+  ['s1_lol',-1,'',t(540,245,40,600,CR,'League of Legends',mid+' letter-spacing="1"')],['s1_wf',-1,'',t(540,353,108,800,CR,'World Finals',mid+' letter-spacing="-3"')],['s1_lobby',-1,'',t(540,417,42,600,CR,'in der GG Open Lobby',mid)],
+  ['s2_bg',1,pb,''],['s2_ill',1,illX,''],['s2_date',-1,'',t(540,170,60,700,CR,'Samstag, 14.11.2026',mid)],
+  ['s2_t19',-1,'',t(290,360,130,800,CR,'19:00',mid+' letter-spacing="-3"')+t(290,418,44,600,CR,'Einlass',mid)],['s2_t20',-1,'',t(790,360,130,800,CR,'20:00',mid+' letter-spacing="-3"')+t(790,418,44,600,CR,'Beginn',mid)],
+  ['s2_addr',-1,'',t(540,530,46,600,CR,'Hauptstraße 240, Herne',mid)]];
+ mkdirSync('motion/public/layers',{recursive:true});
+ const b2=await chromium.launch(),p2=await b2.newPage({viewport:{width:1080,height:1350}});
+ for(const[n,i,pano,el]of L){const bg=n.endsWith('_bg')?`<rect width="3240" height="1350" fill="${G}"/>`:'';
+  const f=`varianten/x/${n}.html`;
+  writeFileSync(f,`<!doctype html><meta charset=utf-8><style>${css}html,body{background:transparent}</style><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" font-family="P,sans-serif">${pano?`<svg width="1080" height="1350" viewBox="${i*1080} 0 1080 1350">${bg}${pano}</svg>`:''}${el}</svg>`);
+  await p2.goto(`file://${process.cwd()}/${f}`);await p2.evaluate(()=>document.fonts.ready);await p2.screenshot({path:`motion/public/layers/${n}.png`,omitBackground:true})}
+ await b2.close();
+}
